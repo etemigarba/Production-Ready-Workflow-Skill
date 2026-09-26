@@ -151,4 +151,4 @@ Ethereal Multimedia Technology — R&D Software Development
 
 ---
 
-*Part of the [Agentic Engineering Skills](https://github.com/etemi/agentic-engineering-skills) collection.*
+*Part of the [Agentic Engineering Skills](https://github.com/etemigarba/Agentic-Engineering-Skills) collection.*
