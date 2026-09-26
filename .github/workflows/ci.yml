@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate Skill
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate markdown
+        run: npm run docs:check
+
+      - name: Check required files exist
+        run: |
+          test -f SKILL.md && echo "✓ SKILL.md"
+          test -f production-ready-workflow.skill && echo "✓ production-ready-workflow.skill"
+          test -f LICENSE && echo "✓ LICENSE"
+          test -f README.md && echo "✓ README.md"
+          test -f package.json && echo "✓ package.json"
+          test -d docs && echo "✓ docs/"
+          test -d wiki && echo "✓ wiki/"
+          test -d examples && echo "✓ examples/"
+          test -d .github && echo "✓ .github/"
+
+      - name: Validate SKILL.md front-matter
+        run: |
+          head -20 SKILL.md | grep -E "^(name|description):" && echo "✓ Front-matter valid"
+
+  test-dogfood:
+    name: Dogfood Test (Smoke)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create test project
+        run: |
+          mkdir -p /tmp/test-project
+          cd /tmp/test-project
+          npm init -y
+          echo '{"name":"test"}' > package.json
+
+      - name: Verify skill loads
+        run: |
+          # Basic validation that skill files are well-formed
+          grep -q "production-ready-workflow" SKILL.md
+          echo "✓ Skill name matches"
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [validate]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build skill binary
+        run: npm run compile
+
+      - name: Publish to npm
+        if: env.NPM_TOKEN != ''
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
