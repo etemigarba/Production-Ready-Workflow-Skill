@@ -1,0 +1,72 @@
+{
+  "name": "@etemi/production-ready-workflow",
+  "version": "1.0.0",
+  "description": "A 6-phase agentic skill that transforms full-stack web applications into zero-mock-data, production-grade systems. Eradicates hardcoded values, wires live API bindings, enforces SOLID architecture, and validates via live end-to-end simulation.",
+  "keywords": [
+    "claude-code",
+    "ecc",
+    "opencode",
+    "skill",
+    "agentic-engineering",
+    "production-readiness",
+    "refactoring",
+    "full-stack",
+    "zero-mock-data",
+    "end-to-end-testing"
+  ],
+  "homepage": "https://github.com/etemi/production-ready-workflow",
+  "bugs": {
+    "url": "https://github.com/etemi/production-ready-workflow/issues",
+    "email": "etemi@etherealmultimedia.tech"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/etemi/production-ready-workflow.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Prof. Etemi Joshua Garba",
+    "email": "etemi@etherealmultimedia.tech",
+    "url": "https://github.com/etemi"
+  },
+  "files": [
+    "SKILL.md",
+    "production-ready-workflow.skill",
+    "LICENSE",
+    "README.md",
+    "docs/",
+    "wiki/",
+    "examples/"
+  ],
+  "scripts": {
+    "validate": "node scripts/validate-skill.js",
+    "compile": "ecc compile SKILL.md -o production-ready-workflow.skill",
+    "test:dogfood": "node scripts/dogfood-test.js",
+    "docs:check": "markdownlint '**/*.md' --ignore node_modules",
+    "prepublishOnly": "npm run validate && npm run compile"
+  },
+  "peerDependencies": {
+    "claude-code": ">=1.0.0",
+    "opencode": ">=0.5.0"
+  },
+  "devDependencies": {
+    "markdownlint-cli": "^0.38.0",
+    "ecc": "^0.5.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/etemi"
+  }
+}
